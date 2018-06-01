@@ -28,7 +28,7 @@ $ curl -X POST http://kong:8001/apis/{api}/plugins \
 | `name` 					        | | plugin name `kong-oidc-auth` |
 | `config.authorize_url` 	| | authorization url of the OAUTH provider (the one to which you will be redirected when not authenticated) |
 | `config.scope` 			    | | OAUTH scope of the authorization request |
-| `config.pfidpadapterid` <br /> <small>Optional</small> 	    | | OAUTH PingFederate Adaptor ID of the authorization request ex: CompanyIdOIDCStage, essentially an idp "environment" |
+| `config.pfidpadapterid` <br /> <small>Optional</small> 	    | | OAUTH PingFederate Adaptor ID of the authorization request ex: CompanyIdOIDCStage, essentially points to the idp "environment, ping federate specific only" |
 | `config.token_url` 		  | | url of the Oauth provider to request the access token |
 | `config.client_id` 		  | | OAUTH Client Id |
 | `config.client_secret` 	| | OAUTH Client Secret |
