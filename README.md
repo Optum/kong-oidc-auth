@@ -47,3 +47,20 @@ In addition to the `user_keys` will be added a `X-OAUTH-TOKEN` header with the a
 NOTES:
 Ping Federate requires you to authorize a callback URL, all proxies have a standard call back route of:
 https://api-gateway.company.com/your/proxy/path/oauth2/callback
+
+## Supported Kong Releases
+Kong >= 0.12.x 
+
+## Installation
+Recommended:
+```
+$ luarocks install kong-oidc-auth
+```
+Other:
+```
+$ git clone https://github.com/Optum/kong-oidc-auth.git /path/to/kong/plugins/kong-oidc-auth
+$ cd /path/to/kong/plugins/kong-oidc-auth
+$ luarocks make *.rockspec
+```
+
+Feel free to open issues, or refer to our Contribution Guidelines if you have any questions.
