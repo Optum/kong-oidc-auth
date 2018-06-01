@@ -1,0 +1,24 @@
+Kong OIDC Plugin
+Copyright 2018 Optum
+
+Project Description:
+====================
+
+The Kong OIDC Auth Plugin is a small, lua-based, OpenResty Nginx module which provides external authentication on Kong’s proxy requests. The purpose of this OIDC plugin is to provide authentication against Optum’s Ping Federate service. OpenID Connect enabled login is a common and popular pattern across many companies.
+
+Authors:
+Jeremy Justus, ©Optum 2018
+Ross Sbriscia, ©Optum 2018
+
+
+Added Files:
+============
+
+
+
+
+
+
+
+Modified Files:
+===============
