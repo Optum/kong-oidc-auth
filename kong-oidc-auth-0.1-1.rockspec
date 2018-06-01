@@ -5,7 +5,7 @@ source = {
 }
 description = {
    summary = "OpenID Connect authentication with Kong gateway",
-   detailed = [[]],
+   detailed = [[Please refer to the documentation associated here: https://github.com/Optum/kong-oidc-auth ]],
    homepage = "https://github.com/Optum/kong-oidc-auth",
    license = "Apache 2.0"
 }
