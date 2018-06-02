@@ -63,4 +63,4 @@ $ cd /path/to/kong/plugins/kong-oidc-auth
 $ luarocks make *.rockspec
 ```
 
-Feel free to open issues, or refer to our Contribution Guidelines if you have any questions.
+Feel free to open issues, or refer to our [Contribution Guidelines](https://github.com/Optum/kong-oidc-auth/CONTRIBUTIONS.md) if you have any questions.
