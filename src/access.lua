@@ -82,9 +82,9 @@ end
 function  handle_logout(encrypted_token, conf)
    --Terminate the Cookie
    if type(ngx.header["Set-Cookie"]) == "table" then
-	ngx.header["Set-Cookie"] = { "EOAuthToken=;Path=/;Expires=Thu, Jan 01 1970 00:00:00 UTC;HttpOnly" .. cookieDomain, unpack(ngx.header["Set-Cookie"]) }
+	ngx.header["Set-Cookie"] = { "EOAuthToken=;Path=/;Expires=Thu, Jan 01 1970 00:00:00 UTC;Max-Age=0;HttpOnly" .. cookieDomain, unpack(ngx.header["Set-Cookie"]) }
    else
-        ngx.header["Set-Cookie"] = { "EOAuthToken=;Path=/;Expires=Thu, Jan 01 1970 00:00:00 UTC;HttpOnly" .. cookieDomain, ngx.header["Set-Cookie"] }
+        ngx.header["Set-Cookie"] = { "EOAuthToken=;Path=/;Expires=Thu, Jan 01 1970 00:00:00 UTC;Max-Age=0;HttpOnly" .. cookieDomain, ngx.header["Set-Cookie"] }
    end
    
    if conf.user_info_cache_enabled then
