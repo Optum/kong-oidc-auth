@@ -63,4 +63,8 @@ $ cd /path/to/kong/plugins/kong-oidc-auth
 $ luarocks make *.rockspec
 ```
 
+## Maintainers
+[jeremyjpj0916](https://github.com/jeremyjpj0916)  
+[rsbrisci](https://github.com/rsbrisci)  
+
 Feel free to open issues, or refer to our [Contribution Guidelines](https://github.com/Optum/kong-oidc-auth/blob/master/CONTRIBUTING.md) if you have any questions.
