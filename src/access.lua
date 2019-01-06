@@ -7,7 +7,6 @@ local str = require "resty.string"
 local openssl_digest = require "openssl.digest"
 local cipher = require "openssl.cipher"
 local aes = cipher.new("AES-128-CBC")
-local responses = require "kong.tools.responses"
 local oidc_error = nil
 local salt = nil --16 char alphanumeric
 local cookieDomain = nil
@@ -91,7 +90,7 @@ function  handle_logout(encrypted_token, conf)
       singletons.cache:invalidate(encrypted_token)
    end
    
-   return responses.send_HTTP_OK()
+   return kong.response.exit(200)
 end
 
 -- Callback Handling
@@ -119,16 +118,14 @@ function  handle_callback( conf, callback_url )
 
         if not res then
             oidc_error = {status = ngx.HTTP_INTERNAL_SERVER_ERROR, message = "Failed to request: " .. err}
-            responses.send(oidc_error.status, oidc_error.message)
-            return
+            return kong.response.exit(oidc_error.status, { message = oidc_error.message })
         end
 
         local json = cjson.decode(res.body)
         local access_token = json.access_token
         if not access_token then
             oidc_error = {status = ngx.HTTP_BAD_REQUEST, message = json.error_description}
-            responses.send(oidc_error.status, oidc_error.message)
-            return
+            return kong.response.exit(oidc_error.status, { message = oidc_error.message })
         end
 
 	if type(ngx.header["Set-Cookie"]) == "table" then
@@ -153,8 +150,7 @@ function  handle_callback( conf, callback_url )
         end
     else
         oidc_error = {status = ngx.HTTP_UNAUTHORIZED, message = "User has denied access to the resources"}
-        responses.send(oidc_error.status, oidc_error.message)
-        return
+        return kong.response.exit(oidc_error.status, { message = oidc_error.message })
     end
 end
 
@@ -225,8 +221,7 @@ function _M.run(conf)
 		    if conf.hosted_domain ~= "" and conf.email_key ~= "" then
 			if not pl_stringx.endswith(json[conf.email_key], conf.hosted_domain) then
 			    oidc_error = {status = ngx.HTTP_UNAUTHORIZED, message = "Hosted domain is not matching"}
-			    responses.send(oidc_error.status, oidc_error.message)
-			    return
+			    return kong.response.exit(oidc_error.status, { message = oidc_error.message })
 			end
 		    end
 
@@ -243,8 +238,7 @@ function _M.run(conf)
 		    end
 
 		else
-		    responses.send_HTTP_INTERNAL_SERVER_ERROR(err)
-		    return
+		    return kong.response.exit(500, { message = err })
 		end
 	    end
 
