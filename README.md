@@ -49,7 +49,7 @@ Ping Federate requires you to authorize a callback URL, all proxies have a stand
 https://api-gateway.company.com/your/proxy/path/oauth2/callback
 
 ## Supported Kong Releases
-Kong >= 0.12.x 
+Kong >= 1.0
 
 ## Installation
 Recommended:
