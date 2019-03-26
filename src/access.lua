@@ -129,17 +129,21 @@ function  handle_callback( conf, callback_url )
             return kong.response.exit(oidc_error.status, { message = oidc_error.message })
         end
 
-	if type(ngx.header["Set-Cookie"]) == "table" then
-	   ngx.header["Set-Cookie"] = { "EOAuthToken=" .. encode_token(access_token, conf) .. ";Path=/;Expires=" .. ngx.cookie_time(ngx.time() + 1800) .. ";Max-Age=1800;HttpOnly" .. cookieDomain, unpack(ngx.header["Set-Cookie"]) }
+    	if type(ngx.header["Set-Cookie"]) == "table" then
+    	   ngx.header["Set-Cookie"] = { "EOAuthToken=" .. encode_token(access_token, conf) .. ";Path=/;Expires=" .. ngx.cookie_time(ngx.time() + 1800) .. ";Max-Age=1800;HttpOnly" .. cookieDomain, unpack(ngx.header["Set-Cookie"]) }
         else
-	   ngx.header["Set-Cookie"] = { "EOAuthToken=" .. encode_token(access_token, conf) .. ";Path=/;Expires=" .. ngx.cookie_time(ngx.time() + 1800) .. ";Max-Age=1800;HttpOnly" .. cookieDomain, ngx.header["Set-Cookie"] }
+    	   ngx.header["Set-Cookie"] = { "EOAuthToken=" .. encode_token(access_token, conf) .. ";Path=/;Expires=" .. ngx.cookie_time(ngx.time() + 1800) .. ";Max-Age=1800;HttpOnly" .. cookieDomain, ngx.header["Set-Cookie"] }
         end
-	
-	--Support redirection back to Application Loggedin Dashboard for subsequent transactions
-	if conf.app_login_redirect_url ~= "" then
-	   return ngx.redirect(conf.app_login_redirect_url)
-	end
-	
+    	
+    	--Support redirection back to Application Loggedin Dashboard for subsequent transactions
+    	-- if conf.app_login_redirect_url ~= "" then
+    	--    return ngx.redirect(conf.app_login_redirect_url)
+    	-- end
+    	if redirect_url ~= "" then
+            return ngx.redirect(redirect_url)
+        end
+
+
         -- Support redirection back to Kong if necessary
         local redirect_back = ngx.var.cookie_EOAuthRedirectBack
 		
@@ -147,7 +151,7 @@ function  handle_callback( conf, callback_url )
             return ngx.redirect(redirect_back) --Should always land here if no custom Loggedin page defined!
         else
           --return redirect_to_auth(conf, callback_url)
-	    return
+	       return
         end
     else
         oidc_error = {status = ngx.HTTP_UNAUTHORIZED, message = "User has denied access to the resources"}
