@@ -168,10 +168,7 @@ function _M.run(conf)
 	  callback_url = ngx.var.scheme .. "://" .. ngx.var.host .. path_prefix .. "/oauth2/callback"
 	elseif pl_stringx.endswith(path_prefix, "/oauth2/callback") then --We are in the callback of our proxy
 	  callback_url = ngx.var.scheme .. "://" .. ngx.var.host .. path_prefix
-    -- ngx.log(ngx.ERR, pl_stringx.split(path_prefix, '/oauth2/callback'))
     handle_callback(conf, callback_url)
-    -- ngx.log(ngx.ERR, "Could not retrieve UserInfo: ", err)
-    -- handle_callback(conf, pl_stringx.split(path_prefix, '/oauth2/callback')[0])
 	else
 	  callback_url = ngx.var.scheme .. "://" .. ngx.var.host .. path_prefix .. "/oauth2/callback"
 	end
