@@ -19,6 +19,7 @@ end
 return {
   fields = {
     authorize_url = {type = "url", required = true, func = validate_url},
+    service_logout_url = {type = "string", required = false, default = ""},
     app_login_redirect_url = {type = "string", required = false, default = ""},
     token_url = {type = "url", required = true, func = validate_url},
     user_url  = {type = "url", required = true, func = validate_url},

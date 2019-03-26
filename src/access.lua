@@ -80,17 +80,20 @@ end
 -- Logout Handling
 function  handle_logout(encrypted_token, conf)
    --Terminate the Cookie
+   local redirect_url = string.format("%s?redirect_uri=%s", conf.service_logout_url, conf.app_login_redirect_url)
    if type(ngx.header["Set-Cookie"]) == "table" then
 	ngx.header["Set-Cookie"] = { "EOAuthToken=;Path=/;Expires=Thu, Jan 01 1970 00:00:00 UTC;Max-Age=0;HttpOnly" .. cookieDomain, unpack(ngx.header["Set-Cookie"]) }
    else
         ngx.header["Set-Cookie"] = { "EOAuthToken=;Path=/;Expires=Thu, Jan 01 1970 00:00:00 UTC;Max-Age=0;HttpOnly" .. cookieDomain, ngx.header["Set-Cookie"] }
    end
-   
+   -- Remove session
    if conf.user_info_cache_enabled then
       singletons.cache:invalidate(encrypted_token)
    end
-   
-   return kong.response.exit(200)
+   -- Redirect to IAM service logout
+   return kong.response.exit(301, { message = "Logged Out" }, {
+        ["Location:"] = redirect_url
+    })
 end
 
 -- Callback Handling
