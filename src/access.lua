@@ -134,15 +134,6 @@ function  handle_callback( conf, callback_url )
         else
     	   ngx.header["Set-Cookie"] = { "EOAuthToken=" .. encode_token(access_token, conf) .. ";Path=/;Expires=" .. ngx.cookie_time(ngx.time() + 1800) .. ";Max-Age=1800;HttpOnly" .. cookieDomain, ngx.header["Set-Cookie"] }
         end
-    	
-    	--Support redirection back to Application Loggedin Dashboard for subsequent transactions
-    	-- if conf.app_login_redirect_url ~= "" then
-    	--    return ngx.redirect(conf.app_login_redirect_url)
-    	-- end
-    	if redirect_url ~= "" then
-            return ngx.redirect(redirect_url)
-        end
-
 
         -- Support redirection back to Kong if necessary
         local redirect_back = ngx.var.cookie_EOAuthRedirectBack
@@ -177,8 +168,10 @@ function _M.run(conf)
 	  callback_url = ngx.var.scheme .. "://" .. ngx.var.host .. path_prefix .. "/oauth2/callback"
 	elseif pl_stringx.endswith(path_prefix, "/oauth2/callback") then --We are in the callback of our proxy
 	  callback_url = ngx.var.scheme .. "://" .. ngx.var.host .. path_prefix
-      -- handle_callback(conf, callback_url)
-      handle_callback(conf, pl_stringx.split(path_prefix, '/oauth2/callback')[0])
+    -- ngx.log(ngx.ERR, pl_stringx.split(path_prefix, '/oauth2/callback'))
+    handle_callback(conf, callback_url)
+    -- ngx.log(ngx.ERR, "Could not retrieve UserInfo: ", err)
+    -- handle_callback(conf, pl_stringx.split(path_prefix, '/oauth2/callback')[0])
 	else
 	  callback_url = ngx.var.scheme .. "://" .. ngx.var.host .. path_prefix .. "/oauth2/callback"
 	end
