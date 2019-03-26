@@ -91,9 +91,8 @@ function  handle_logout(encrypted_token, conf)
       singletons.cache:invalidate(encrypted_token)
    end
    -- Redirect to IAM service logout
-   return kong.response.exit(301, { message = "Logged Out" }, {
-        ["Location:"] = redirect_url
-    })
+   return ngx.redirect(redirect_url)
+
 end
 
 -- Callback Handling
