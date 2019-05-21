@@ -224,8 +224,11 @@ function _M.run(conf)
 		      ngx.header["X-Oauth-".. key] = userInfo[key]
 		      ngx.req.set_header("X-Oauth-".. key, userInfo[key])
 		  end
-		      ngx.req.set_header("X-Oauth-Token", access_token)
-		      ngx.header["X-Oauth-Token"] = access_token
+      if (conf.realm ~= "" and (pl_stringx.count(ngx.var.request_uri, conf.realm) > 0)) then -- inject realm name into headers
+       ngx.header["X-Oauth-realm"] = conf.realm
+      end
+      ngx.req.set_header("X-Oauth-Token", access_token)
+      ngx.header["X-Oauth-Token"] = access_token
 		  return
 		end
   end
@@ -247,6 +250,9 @@ function _M.run(conf)
     			ngx.header["X-Oauth-".. key] = json[key]
     			ngx.req.set_header("X-Oauth-".. key, json[key])
 		    end
+        if (conf.realm ~= "" and (pl_stringx.count(ngx.var.request_uri, conf.realm) > 0)) then -- inject realm name into headers
+          ngx.header["X-Oauth-realm"] = conf.realm
+        end
 		    ngx.req.set_header("X-Oauth-Token", access_token)
 		    ngx.header["X-Oauth-Token"] = access_token
 

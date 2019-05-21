@@ -32,6 +32,7 @@ return {
     cookie_domain = {type = "string", default = ".company.com"},
     user_info_periodic_check = {type = "number", required = true, default = 60},
     hosted_domain = {type = "string", default = ""},
+    realm = {type = "string", default = ""},
     email_key = {type = "string", default = ""},
     user_info_cache_enabled = {type = "boolean", default = false}
   }
