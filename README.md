@@ -44,8 +44,9 @@ $ curl -X POST http://kong:8001/apis/{api}/plugins \
 | `config.cookie_domain` 		  | | Specify the domain in which this cookie is valid for, realistically will need to match the gateway |
 | `config.user_info_cache_enabled` 		  | | This enables storing the userInfo in Kong local cache which enables sending the entire requested user information to the backend service upon every request, otherwise user info only comes back occasionally and backend api service providers are required to validate the EOAuth Cookie Session with cached user information within their logic |
 | `config.realm`        | | (Optional) This value will be passed as `X-Oauth-realm` _if and only if_ it is included as part of the request URL. |
+| `config.allowed_roles`        | | (Optional) An array of roles, any of which should grant access to this route. This will be checked against the `groups` field from your OIDC providers userinfo endpoint. You _must_ make roles available as userinfo.groups for this to work, otherwise enabling this option will block all users as their roles will not be retrievable. |
 
-In addition to the `user_keys` will be added a `X-OAUTH-TOKEN` header with the access token of the provider.
+Data available from the userinfo endpoint and included in the `config.user_keys` section will be included as headers following the pattern `X-Oauth-{field}` to upstream services.
 
 NOTES:
 Ping Federate requires you to authorize a callback URL, all proxies have a standard call back route of:
