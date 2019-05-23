@@ -33,6 +33,7 @@ return {
     user_info_periodic_check = {type = "number", required = true, default = 60},
     hosted_domain = {type = "string", default = ""},
     realm = {type = "string", default = ""},
+    allowed_roles = {type = "array", default = {}},
     email_key = {type = "string", default = ""},
     user_info_cache_enabled = {type = "boolean", default = false}
   }

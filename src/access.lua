@@ -11,6 +11,19 @@ local oidc_error = nil
 local salt = nil --16 char alphanumeric
 local cookieDomain = nil
 
+local function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
+
 local function getUserInfo(access_token, callback_url, conf)
     local httpc = http:new()
     local res, err = httpc:request_uri(conf.user_url, {
@@ -41,6 +54,34 @@ local function getKongKey(eoauth_token, access_token, callback_url, conf)
   end
 	
   return userInfo
+end
+
+local function is_member(_obj, _set)
+  for _,v in pairs(_set) do
+    if v == _obj then
+      return true
+    end
+  end
+  return false
+end
+
+
+local function validate_roles(conf, token)
+  if token["groups"] == nil then
+    ngx.log(ngx.ERR, 'oidc.userinfo.groups not availble! Check keycloak settings.')
+    return false
+  end
+  local _allowed_roles = conf.allowed_roles
+  local _next = next(_allowed_roles)
+  if _next == nil then
+   return true-- no roles provided for checking. Ok.
+  end
+  for _, role in pairs(_allowed_roles) do
+    if (is_member(role, token["groups"]) == true) then
+      return true
+    end
+  end
+  return false -- no matching roles
 end
 
 function redirect_to_auth( conf, callback_url )
@@ -220,6 +261,11 @@ function _M.run(conf)
   if conf.user_info_cache_enabled then
 		local userInfo = getKongKey(encrypted_token, access_token, callback_url, conf)
 		if userInfo then
+      -- Check if allowed_roles is set && enforce
+      local valid = validate_roles(conf, userInfo)
+      if valid == false then
+        return kong.response.exit(401, { message = "User lacks valid role for this OIDC resource" })
+      end
 		  for i, key in ipairs(conf.user_keys) do
 		      ngx.header["X-Oauth-".. key] = userInfo[key]
 		      ngx.req.set_header("X-Oauth-".. key, userInfo[key])
@@ -239,6 +285,11 @@ function _M.run(conf)
 		local json = getUserInfo(access_token, callback_url, conf)
 
 		if json then
+        -- Check if allowed_roles is set && enforce
+        local valid = validate_roles(conf, json)
+        if valid == false then
+          return kong.response.exit(401, { message = "User lacks valid role for this OIDC resource" })
+        end
 		    if conf.hosted_domain ~= "" and conf.email_key ~= "" then
     			if not pl_stringx.endswith(json[conf.email_key], conf.hosted_domain) then
     			    oidc_error = {status = ngx.HTTP_UNAUTHORIZED, message = "Hosted domain is not matching"}
