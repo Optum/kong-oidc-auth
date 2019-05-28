@@ -67,14 +67,14 @@ end
 
 
 local function validate_roles(conf, token)
-  if token["groups"] == nil then
-    ngx.log(ngx.ERR, 'oidc.userinfo.groups not availble! Check keycloak settings.')
-    return false
-  end
   local _allowed_roles = conf.allowed_roles
   local _next = next(_allowed_roles)
   if _next == nil then
    return true-- no roles provided for checking. Ok.
+  end
+  if token["groups"] == nil then
+    ngx.log(ngx.ERR, 'oidc.userinfo.groups not availble! Check keycloak settings.')
+    return false
   end
   for _, role in pairs(_allowed_roles) do
     if (is_member(role, token["groups"]) == true) then
