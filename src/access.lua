@@ -10,6 +10,7 @@ local aes = cipher.new("AES-128-CBC")
 local oidc_error = nil
 local salt = nil --16 char alphanumeric
 local cookieDomain = nil
+local kong = kong 
 
 local function getUserInfo(access_token, callback_url, conf)
     local httpc = http:new()
