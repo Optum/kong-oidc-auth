@@ -1,7 +1,6 @@
 local _M = {}
 local cjson = require "cjson.safe"
 local pl_stringx = require "pl.stringx"
-local singletons = require "kong.singletons"
 local http = require "resty.http"
 local str = require "resty.string"
 local openssl_digest = require "openssl.digest"
@@ -34,7 +33,7 @@ end
 local function getKongKey(eoauth_token, access_token, callback_url, conf)
   -- This will add a 28800 second (8 hour) expiring TTL on this cached value
   -- https://github.com/thibaultcha/lua-resty-mlcache/blob/master/README.md
-  local userInfo, err = singletons.cache:get(eoauth_token, { ttl = 28800 }, getUserInfo, access_token, callback_url, conf)
+  local userInfo, err = kong.cache:get(eoauth_token, { ttl = 28800 }, getUserInfo, access_token, callback_url, conf)
 	
   if err then
     ngx.log(ngx.ERR, "Could not retrieve UserInfo: ", err)
@@ -88,7 +87,7 @@ function  handle_logout(encrypted_token, conf)
    end
    
    if conf.user_info_cache_enabled then
-      singletons.cache:invalidate(encrypted_token)
+      kong.cache:invalidate(encrypted_token)
    end
    
    return kong.response.exit(200)
