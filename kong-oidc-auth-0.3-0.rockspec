@@ -9,7 +9,9 @@ description = {
    homepage = "https://github.com/Optum/kong-oidc-auth",
    license = "Apache 2.0"
 }
-dependencies = {}
+dependencies = {
+  "luaossl == 20220711-0",
+}
 build = {
    type = "builtin",
    modules = {
